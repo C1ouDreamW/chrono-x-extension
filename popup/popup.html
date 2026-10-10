@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Chrono X · 双时区</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-icon" aria-hidden="true">
+          <svg viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="13.5" stroke="white" stroke-width="2.6" opacity=".95"/><path d="M20 11v9l6.2 3.7" stroke="white" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="30.7" cy="9.2" r="3.3" fill="#98E7FF"/></svg>
+        </div>
+        <div><h1>Chrono <span>X</span></h1><p>跨越时区 · 读懂每一刻</p></div>
+      </div>
+      <span id="status" class="status is-on"><span class="status-dot"></span><span id="statusText">已启用</span></span>
+    </header>
+
+    <section class="hero" aria-label="时间预览">
+      <div class="hero-orbit" aria-hidden="true"><div class="orbit-one"></div><div class="orbit-two"></div><div class="orbit-point"></div></div>
+      <div class="hero-top"><span class="hero-kicker">WORLD CLOCK</span><span class="hero-live"><span class="live-dot"></span> LIVE PREVIEW</span></div>
+      <div class="hero-times">
+        <div class="time-column"><div class="hero-label"><span class="hero-flag">⌂</span>我的时间</div><div class="hero-clock" id="myClock">--:--</div><div class="hero-place" id="myPlace">正在读取时区</div></div>
+        <div class="hero-divider"></div>
+        <div class="time-column"><div class="hero-label"><span class="hero-flag">↗</span>纽约 · 示例</div><div class="hero-clock" id="exampleClock">--:--</div><div class="hero-place" id="examplePlace">America/New_York</div></div>
+      </div>
+      <div class="hero-foot">同一瞬间，不同城市。帖子将显示真实日期与时间。</div>
+    </section>
+
+    <section class="section">
+      <div class="section-heading"><h2>显示偏好</h2><span class="section-sub">APPEARANCE</span></div>
+      <div class="settings-card">
+        <label class="setting-item setting-primary"><span class="setting-icon accent-purple"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="8.6"/><path d="M12 7.5v5l3.5 2"/></svg></span><span class="setting-copy"><strong>启用双时区</strong><small>在 X 的帖子中显示时间条</small></span><input type="checkbox" id="enabled" class="toggle" checked></label>
+        <div class="thin-line"></div>
+        <label class="setting-item"><span class="setting-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8"/><path d="M4 12h16M12 4c-4 4-4 12 0 16m0-16c4 4 4 12 0 16"/></svg></span><span class="setting-copy"><strong>我的本地时间</strong><small>显示你的发帖时间换算结果</small></span><input type="checkbox" id="showLocal" class="toggle" checked></label>
+        <label class="setting-item"><span class="setting-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M18 10c0 4-6 10-6 10S6 14 6 10a6 6 0 1 1 12 0Z"/><circle cx="12" cy="10" r="2"/></svg></span><span class="setting-copy"><strong>作者所在地时间</strong><small>通过公开位置或手动设置</small></span><input type="checkbox" id="showAuthor" class="toggle" checked></label>
+        <label class="setting-item"><span class="setting-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="m4 12 5 5L20 6"/><path d="M4 5h5M4 9h3M17 18h3"/></svg></span><span class="setting-copy"><strong>自动识别公开位置</strong><small>读取当前可见的主页 / 悬浮卡片位置</small></span><input type="checkbox" id="autoDetect" class="toggle" checked></label>
+        <label class="setting-item"><span class="setting-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11.5V17M12 7v.3"/></svg></span><span class="setting-copy"><strong>显示未知时区提示</strong><small>点击帖子中的提示即可手动设置</small></span><input type="checkbox" id="showUnknown" class="toggle" checked></label>
+      </div>
+    </section>
+
+    <section class="section section-options">
+      <div class="section-heading"><h2>时间格式</h2><span class="section-sub">FORMAT</span></div>
+      <div class="options-card">
+        <label class="select-field"><span>我的时区</span><select id="localZone"><option value="auto">跟随浏览器（自动）</option></select></label>
+        <div class="option-separator"></div>
+        <div class="option-row"><div><strong>12 小时制</strong><small>默认使用清晰的 24 小时制</small></div><input type="checkbox" id="hour12" class="toggle"></div>
+        <div class="option-separator"></div>
+        <div class="option-row"><div><strong>紧凑显示</strong><small>更适合信息密集的时间线</small></div><input type="checkbox" id="compact" class="toggle"></div>
+      </div>
+    </section>
+
+    <section class="section" id="profilesSection">
+      <div class="section-heading"><h2>作者时区管理</h2><span id="manualCount" class="section-sub">0 个手动配置</span></div>
+      <div class="profiles-card">
+        <div class="form-row"><label for="handleInput">X 用户名</label><input id="handleInput" maxlength="16" placeholder="@username" autocomplete="off" spellcheck="false"></div>
+        <div class="form-row"><label for="authorZone">作者时区</label><select id="authorZone"><option value="">选择城市或时区…</option></select></div>
+        <button id="saveProfile" class="save-button" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>添加 / 更新作者</button>
+        <p id="formError" class="form-error" role="status"></p>
+        <div id="manualList" class="profiles-list"></div>
+      </div>
+      <p class="info-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 10v6M12 7v.1"/></svg>作者当地时间是时区换算，不代表其实际发帖位置；无法验证时不会猜测。</p>
+    </section>
+
+    <footer><span>CHRONO X <span class="version">v1.1.0</span></span><span><span class="privacy-dot"></span>本地运行 · 无第三方服务器</span></footer>
+  </main>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="../shared/timezones.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
